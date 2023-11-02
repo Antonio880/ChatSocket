@@ -22,11 +22,11 @@ class userController {
 
   static async createUser(req, res) {
     try {
-      const { email } = req.body;
+      const { email, password } = req.body;
       // Verifique se o usuário com o mesmo e-mail já existe
-      const existingUser = await user.findOne({ email: email });
+      const existingUser = await user.findOne({ email: email, password: password });
       if (existingUser) {
-        return res.status(409).json({ message: 'User already exists' });
+        return res.status(200).json({ message: 'User already exists', user: existingUser });
       }
       // Se o usuário não existir, crie um novo usuário
       const newUser = await user.create(req.body);

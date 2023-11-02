@@ -2,12 +2,15 @@ import Header from '../components/Header';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useUserContext } from '../components/ContextUser';
+import { useSocketContext } from '../components/ContextSocket';
+import io from 'socket.io-client'
 import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
     
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const { setUser } = useUserContext();
+  const { setSocket } = useSocketContext();
   const navigate = useNavigate();
   const onSubmit = async () => {
     const email = watch("email");
@@ -17,14 +20,21 @@ export default function SignIn() {
       email: email,
       password: password,
     }
-    setUser(data);
+    //setUser(data);
     try{
-      await axios.post("http://localhost:3001/users", data);
-      navigate('/');
+      const response = await axios.post("http://localhost:3001/users", data);
+      if(response.status === 201 || response.status === 200){
+        setUser(response.data.user);
+        const socket = await io.connect('http://localhost:3001');
+        socket.emit('set_username', response.data.user.email);
+        setSocket(socket);
+        navigate('/');
+      }else{
+        alert("Error: " + response.status);
+      }
     }catch(e){
-      alert(`User already exists - ${e.message}`);
+      alert(`Error - ${e.message}`);
     }
-    
   }
 
   return (
@@ -84,9 +94,6 @@ export default function SignIn() {
                 </button>
               </div>
             </form>
-            <div>
-              New to Chat?<a href="">Create an account</a>
-            </div>
           </div>
         </div>
       </>

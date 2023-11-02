@@ -1,17 +1,17 @@
-import express from "express";
-import connectDataBase from "./config/dbConnect.js";
-import routes from "./routes/index.js";
+// import express from "express";
+// import connectDataBase from "./config/dbConnect.js";
+// import routes from "./routes/index.js";
 
-const conexao = await connectDataBase();
+// const conexao = await connectDataBase();
 
-conexao.on('error', err => console.error(err));
+// conexao.on('error', err => console.error(err));
 
-conexao.once("open", () => {
-    console.log("Connect to database");
-});
+// conexao.once("open", () => {
+//     console.log("Connect to database");
+// });
 
-const app = express();
+// const app = express();
 
-routes(app);
+// routes(app);
 
-export default app;
+// export default app;
