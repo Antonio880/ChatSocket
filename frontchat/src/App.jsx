@@ -5,8 +5,9 @@ function App() {
  
   return (
     <Routes>
-      <Route path='/' exact element={<Home />} />
-      <Route path='/sign-in' element={<SignIn />}/>
+      <Route path='/home' exact element={<Home />} />
+      <Route path='/' element={<SignIn />}/>
+      <Route path='*' element={<SignIn />}/>
     </Routes>
   )
 }

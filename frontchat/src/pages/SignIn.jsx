@@ -28,7 +28,7 @@ export default function SignIn() {
         const socket = await io.connect('http://localhost:3001');
         socket.emit('set_username', response.data.user.email);
         setSocket(socket);
-        navigate('/');
+        navigate('/home');
       }else{
         alert("Error: " + response.status);
       }

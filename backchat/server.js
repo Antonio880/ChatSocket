@@ -3,6 +3,8 @@ import http from "http";
 import { Server } from "socket.io";
 import "dotenv/config";
 import connectDataBase from "./src/config/dbConnect.js";
+import { user } from "./src/models/User.js";
+import { message } from "./src/models/Message.js";
 import routes from "./src/routes/index.js";
 
 const app = express();
@@ -23,7 +25,7 @@ conexao.once("open", () => {
     console.log("Conectado ao banco de dados");
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
     console.log("Novo cliente conectado", socket.id);
 
     socket.on("disconnect", reason => {
@@ -33,15 +35,21 @@ io.on("connection", (socket) => {
     socket.on("set_username", username => {
         socket.data.username = username;    
     });
+
+    socket.on("get_username", () => {
+        socket.emit("receive_username", socket.data.username);
+    });
   
     
-    socket.on("message", text => {
-        io.emit("receiveMessage", {
-            text,
-            authorId: socket.id,
-            author: socket.data.username
-        });
-    })
+    socket.on("message", data => {
+      io.emit("receiveMessage", {
+          text: data.text,
+          userRec: data.userEnv,
+          userEnv: data.userRec,
+          authorId: socket.id,
+          author: socket.data.username
+      });
+    });
 });
 
 server.listen(PORT, () => {

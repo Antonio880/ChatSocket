@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useRef } from "react";
 import { useSocketContext } from "../ContextSocket";
+import { useUserContext } from "../ContextUser";
 
-export default function Chat() {
+export default function Chat({ userClicked }) {
   const messageRef = useRef();
   const { socket } = useSocketContext();
   const [messageList, setMessageList] = useState([]);
+  const { user } = useUserContext();
 
   const handleSubmit = () => {
     const message = messageRef.current.value;
-    if (!message.trim()) return;
+    if (!message || !message.trim()) return;
 
-    socket.emit("message", message);
+    socket.emit("message", {
+      text: message,
+      userRec: userClicked._id,
+      userEnv: user._id
+    });
     messageRef.current.value = "";
   };
+
+  useEffect(() => console.log(messageList), [messageList]);
 
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
@@ -24,30 +32,36 @@ export default function Chat() {
   }, [socket]);
 
   return (
-    <div className="w-96 mx-auto mt-10 p-4 mt-40 bg-gray-100 rounded-md shadow-md">
-      <div className={`h-80 overflow-y-auto`}>
+    <div className="w-3/4 h-4/3 mx-auto p-4 mt-20 bg-gray-100 rounded-md shadow-md ">
+      <div className="h-80 overflow-y-auto">
         {messageList &&
           messageList.map((message, index) => (
             <div key={index} className="mb-4">
-              {message.authorId === socket.id ? (
-                <div>
-                  <div className="text-indigo-600 font-bold">
-                    {message.author}
+              {message.userRec &&
+                message.userEnv &&
+                message.userRec === userClicked._id &&
+                message.userEnv === user._id ? (
+                  <div>
+                      <div>
+                        <div className="text-indigo-600 font-bold">
+                          {message.author}
+                        </div>
+                        <div className="bg-white w-56 overflow-x-auto p-2 rounded-md shadow-md">
+                          {message.text}
+                        </div>
+                      </div>
                   </div>
-                  <div className="bg-white w-56 overflow-x-auto p-2 rounded-md shadow-md">
-                    {message.text}
+                ): (
+                  <div className="bg-sky flex flex-col">
+                    {console.log(message, socket.id)}
+                    <div className="flex justify-end text-indigo-600 font-bold">
+                      {message.author}
+                    </div>
+                    <div className="flex justify-end bg-white overflow-x-auto w-96 p-3 ml-60 rounded-md shadow-md">
+                      <p className="pr-2">{message.text}</p>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="bg-sky">
-                  <div className="flex justify-end text-indigo-600 font-bold">
-                    {message.author}
-                  </div>
-                  <div className="flex justify-end bg-white overflow-x-auto w-56 p-2 ml-32 rounded-md shadow-md">
-                    {message.text}
-                  </div>
-                </div>
-              )}
+                )}
             </div>
           ))}
       </div>

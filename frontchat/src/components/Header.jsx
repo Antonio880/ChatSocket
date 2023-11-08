@@ -19,10 +19,6 @@ export default function Home() {
   const { user, setUser } = useUserContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -90,7 +86,7 @@ export default function Home() {
                           type="button"
                           className="relative bg-indigo-900 rounded-md p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                           onClick={() => {
-                            navigate("/sign-in");
+                            navigate("/");
                           }}
                         >
                           Sign-In
