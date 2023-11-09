@@ -9,7 +9,7 @@ export default function Home() {
   const [viewChat, setViewChat] = useState(false);
   const { socket } = useSocketContext();
   const [ userClicked, setUserClicked] = useState(null);
-  // const [messageList, setMessageList] = useState([]);
+  const [messageList, setMessageList] = useState([]);
   const [currentUser, setCurrentUser] = useState('');
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Home() {
         <Contacts setViewChat={setViewChat} viewChat={viewChat} currentUser={currentUser} setUserClicked={setUserClicked}/>
         {viewChat && (
           <div className="items-center justify-center h-96 w-full ">
-            <Chat userClicked={userClicked} />
+            <Chat userClicked={userClicked} messageList={messageList} setMessageList={setMessageList} />
           </div>
         )}
       </div>
