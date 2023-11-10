@@ -24,17 +24,24 @@ class MessageController {
   static async createMessage(req, res) {
     const newMessage = req.body;
     try {
-      const userFoundEnv = await user.findById(newMessage.userEnv);
-      const userFoundRec = await user.findById(newMessage.userRec);
-      console.log(userFoundEnv, userFoundRec);
-      if (!userFoundEnv || !userFoundRec) {
-        return res.status(404).json({ message: "User not found" });
+      // Verificar se já existe uma mensagem semelhante
+      const existingMessage = await message.findOne({
+        text: newMessage.text,
+        userRec: newMessage.userRec,
+        userEnv: newMessage.userEnv,
+      });
+
+      if (existingMessage) {
+        // Se existir, atualize a mensagem existente
+        await message.findByIdAndUpdate(existingMessage._id, newMessage);
+        res.status(200).json({ message: "Message updated successfully", message: existingMessage });
+      } else {
+        // Se não existir, crie uma nova mensagem
+        const createdMessage = await message.create(newMessage);
+        res.status(201).json({ message: "Message created successfully", message: createdMessage });
       }
-      const completeMessage = { ...newMessage, userEnv: { ...userFoundEnv._doc }, userRec: { ...userFoundRec._doc } };
-      const createdMessage = await message.create(completeMessage);
-      res.status(201).json({ message: "Message created successfully", message: createdMessage });
     } catch (error) {
-      res.status(500).json({ message: `${error.message} - Failed to create message` });
+      res.status(500).json({ message: `${error.message} - Failed to create/update message` });
     }
   }
 

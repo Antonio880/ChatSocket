@@ -2,35 +2,51 @@ import React, { useState, useEffect } from "react";
 import { useRef } from "react";
 import { useSocketContext } from "../ContextSocket";
 import { useUserContext } from "../ContextUser";
+import axios from "axios";
 
 export default function Chat({ userClicked, messageList, setMessageList }) {
   const messageRef = useRef();
   const { socket } = useSocketContext();
-  // const [messageList, setMessageList] = useState([]);
   const { user } = useUserContext();
 
   const handleSubmit = () => {
     const message = messageRef.current.value;
     if (!message || !message.trim()) return;
-
-    socket.emit("message", {
+    const newMessage = {
       text: message,
       userRec: userClicked._id,
       userEnv: user._id,
-    });
-    
+    }
+    socket.emit("message", newMessage);
     messageRef.current.value = "";
   };
 
-  useEffect(() => console.log(messageList), [messageList]);
-
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
+      console.log(data)
+      axios.post("http://localhost:3001/messages", data)
+      .then(response => console.log(response.data))
+      .catch(err => console.log(err));
+
       setMessageList((current) => [...current, data]);
     });
 
     return () => socket.off("receiveMessage");
   }, [socket]);
+
+  useEffect(() => {
+    setMessageList(() => {
+      const messages = [];
+      for (const message of messageList) {
+        if(message.userEnv === user._id){
+          message.authorId = socket.id;
+        }
+        messages.push(message);
+      }
+      return messages;
+    });
+    console.log(messageList);
+  }, []);
 
   return (
     <div className="w-3/4 h-4/3 mx-auto p-4 mt-20 bg-gray-100 rounded-md shadow-md ">
@@ -43,18 +59,19 @@ export default function Chat({ userClicked, messageList, setMessageList }) {
                 message.authorId === socket.id ? (
                   <div>
                     <div>
-                      <div className="text-indigo-600 font-bold">
+                      <div className="text-indigo-800 font-bold">
                         {message.author}
                       </div>
-                      <div className="bg-white w-56 overflow-x-auto p-2 rounded-md shadow-md">
-                        {message.text}
+                      <div className="w-full">
+                        <p className="flex p-2 justify-start bg-white rounded-md shadow-md mr-96">
+                          {message.text}
+                        </p>
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-sky flex flex-col">
-                    {console.log(message, socket.id)}
-                    <div className="flex justify-end text-indigo-600 font-bold">
+                  <div className=" flex flex-col">
+                    <div className="flex justify-end text-indigo-500 font-bold">
                       {message.author}
                     </div>
                     <div className="w-full ">

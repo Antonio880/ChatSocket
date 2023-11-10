@@ -3,8 +3,6 @@ import http from "http";
 import { Server } from "socket.io";
 import "dotenv/config";
 import connectDataBase from "./src/config/dbConnect.js";
-import { user } from "./src/models/User.js";
-import { message } from "./src/models/Message.js";
 import routes from "./src/routes/index.js";
 
 const app = express();
@@ -28,10 +26,6 @@ conexao.once("open", () => {
 io.on("connection", async (socket) => {
     console.log("Novo cliente conectado", socket.id);
 
-    socket.on("disconnect", reason => {
-      console.log("Cliente desconectado", socket.id);
-  });
-
     socket.on("set_username", username => {
         socket.data.username = username;    
     });
@@ -44,8 +38,8 @@ io.on("connection", async (socket) => {
     socket.on("message", data => {
       io.emit("receiveMessage", {
           text: data.text,
-          userRec: data.userEnv,
-          userEnv: data.userRec,
+          userRec: data.userRec,
+          userEnv: data.userEnv,
           authorId: socket.id,
           author: socket.data.username
       });
