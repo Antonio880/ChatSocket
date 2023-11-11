@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import "dotenv/config";
+import cors from "cors";
 import connectDataBase from "./src/config/dbConnect.js";
 import routes from "./src/routes/index.js";
 
@@ -12,6 +13,9 @@ const io = new Server(server, { cors: { origin: "http://localhost:5173" } });
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
+app.use(cors({ 
+    origin: ""
+ }));
 
 routes(app);
 
