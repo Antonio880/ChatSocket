@@ -23,7 +23,7 @@ export default function SignIn() {
     }
     //setUser(data);
     try{
-      const response = await axios.post(`${BASE_URL}/users`, data);
+      const response = await axios.post(`${BASE_URL}users`, data);
       if(response.status === 201 || response.status === 200){
         setUser(response.data.user);
         const socket = await io.connect(BASE_URL);
