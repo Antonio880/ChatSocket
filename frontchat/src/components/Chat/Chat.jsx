@@ -25,7 +25,7 @@ export default function Chat({ userClicked, messageList, setMessageList }) {
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
       console.log(data)
-      axios.post(`${BASE_URL}/messages`, data)
+      axios.post(`${BASE_URL}messages`, data)
       .then(response => console.log(response.data))
       .catch(err => console.log(err));
 
