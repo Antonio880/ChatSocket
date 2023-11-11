@@ -11,6 +11,7 @@ export default function SignIn() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const { setUser } = useUserContext();
   const { setSocket } = useSocketContext();
+  const BASE_URL = "https://chat-socket-eb53a2dd15bb.herokuapp.com/"
   const navigate = useNavigate();
   const onSubmit = async () => {
     const email = watch("email");
@@ -22,10 +23,10 @@ export default function SignIn() {
     }
     //setUser(data);
     try{
-      const response = await axios.post("http://localhost:3001/users", data);
+      const response = await axios.post(`${BASE_URL}/users`, data);
       if(response.status === 201 || response.status === 200){
         setUser(response.data.user);
-        const socket = await io.connect('http://localhost:3001');
+        const socket = await io.connect(BASE_URL);
         socket.emit('set_username', response.data.user.email);
         setSocket(socket);
         navigate('/home');

@@ -8,6 +8,7 @@ export default function Chat({ userClicked, messageList, setMessageList }) {
   const messageRef = useRef();
   const { socket } = useSocketContext();
   const { user } = useUserContext();
+  const BASE_URL = "https://chat-socket-eb53a2dd15bb.herokuapp.com/"
 
   const handleSubmit = () => {
     const message = messageRef.current.value;
@@ -24,7 +25,7 @@ export default function Chat({ userClicked, messageList, setMessageList }) {
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
       console.log(data)
-      axios.post("http://localhost:3001/messages", data)
+      axios.post(`${BASE_URL}/messages`, data)
       .then(response => console.log(response.data))
       .catch(err => console.log(err));
 

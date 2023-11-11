@@ -4,6 +4,7 @@ import axios from "axios";
 
 export default function Example({ setViewChat, viewChat, currentUser, setUserClicked }) {
     const [contacts, setContacts] = useState([]);
+    const BASE_URL = "https://chat-socket-eb53a2dd15bb.herokuapp.com/"
     
     const { socket } = useSocketContext();
 
@@ -14,7 +15,7 @@ export default function Example({ setViewChat, viewChat, currentUser, setUserCli
     }, []);
 
     const getContacts = async () => {
-        await axios.get('http://localhost:3001/users')
+        await axios.get(`${BASE_URL}users`)
             .then(response => {
                 setContacts(response.data);
             })

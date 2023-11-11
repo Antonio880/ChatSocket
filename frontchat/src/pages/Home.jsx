@@ -11,8 +11,8 @@ export default function Home() {
   const { socket } = useSocketContext();
   const [ userClicked, setUserClicked] = useState(null);
   const [messageList, setMessageList] = useState([]);
-  const { user } = useUserContext();
   const [currentUser, setCurrentUser] = useState('');
+  const BASE_URL = "https://chat-socket-eb53a2dd15bb.herokuapp.com/"
 
   useEffect(() => {
     socket.emit("get_username");
@@ -23,7 +23,7 @@ export default function Home() {
   },[]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/messages")
+    axios.get(`${BASE_URL}messages`)
     .then((response) => {
       const messages = [...response.data];
 
