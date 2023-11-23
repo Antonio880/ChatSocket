@@ -7,15 +7,16 @@ import connectDataBase from "./src/config/dbConnect.js";
 import routes from "./src/routes/index.js";
 
 const app = express();
+app.use(cors({
+    origin: "http://localhost:5173"
+}));
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "http://localhost:5173" } });
 
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
-app.use(cors({ 
-    origin: ""
- }));
+
 
 routes(app);
 
