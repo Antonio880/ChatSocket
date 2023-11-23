@@ -11,7 +11,8 @@ export default function SignIn() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const { setUser } = useUserContext();
   const { setSocket } = useSocketContext();
-  const BASE_URL = "https://chat-socket-eb53a2dd15bb.herokuapp.com/"
+  const BASE_URL = "http://localhost:3001/";
+  // "https://chat-socket-eb53a2dd15bb.herokuapp.com/" || 
   const navigate = useNavigate();
   const onSubmit = async () => {
     const email = watch("email");

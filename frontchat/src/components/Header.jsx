@@ -1,6 +1,5 @@
 import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "./ContextUser";
 
@@ -27,18 +26,29 @@ export default function Home() {
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="absolute -inset-0.5" />
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
+                <Disclosure.Panel className="sm:hidden">
+                  <div className="space-y-1 px-2 pb-3 pt-2">
+                    {user && (
+                      <Disclosure.Button
+                        key={user._id}
+                        as="a"
+                        href={user.email}
+                        className={classNames(
+                          user
+                            ? "bg-gray-900 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "block rounded-md px-3 py-2 text-base font-medium"
+                        )}
+                        aria-current={user ? "page" : undefined}
+                      >
+                        {user.email}
+                      </Disclosure.Button>
+                    )}
+                  </div>
+                </Disclosure.Panel>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
+                <div className="flex  items-center">
                   <img
                     className="h-8 w-auto"
                     src="/chatcoin-chat-logo (1).png"
@@ -65,7 +75,9 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="absolute  inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div
+                className={`absolute  inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 `}
+              >
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
@@ -76,7 +88,7 @@ export default function Home() {
                         <div>
                           <h3
                             type="button"
-                            className="relative bg-indigo-900 rounded-md p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                            className={`relative bg-indigo-900 rounded-md p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 `}
                           >
                             {user.email}
                           </h3>

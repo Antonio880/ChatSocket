@@ -8,12 +8,13 @@ import { useUserContext } from "../components/ContextUser";
 
 export default function Home() {
   const [viewChat, setViewChat] = useState(false);
+  const [ viewContacts, setViewContacts] = useState(false);
   const { socket } = useSocketContext();
   const [ userClicked, setUserClicked] = useState(null);
   const [messageList, setMessageList] = useState([]);
   const [currentUser, setCurrentUser] = useState('');
-  const BASE_URL = "https://chat-socket-eb53a2dd15bb.herokuapp.com/"
-
+  const BASE_URL = "http://localhost:3001/"
+  // "https://chat-socket-eb53a2dd15bb.herokuapp.com/" ||
   useEffect(() => {
     socket.emit("get_username");
 
@@ -43,14 +44,22 @@ export default function Home() {
       .catch((e) => console.error(`Error sending - ${e}`));
   }, []);
 
+  useEffect(() => {
+    console.log(userClicked)
+  }, [userClicked]);
+
   return (
     <div className="h-screen">
       <Header />
       <div className="flex flex-row"> 
-        <Contacts setViewChat={setViewChat} viewChat={viewChat} currentUser={currentUser} setUserClicked={setUserClicked}/>
-        {viewChat && (
+        {
+          !viewContacts && (
+            <Contacts setViewChat={setViewChat} viewChat={viewChat} currentUser={currentUser} viewContacts={viewContacts} setViewContacts={setViewContacts} setUserClicked={setUserClicked}/>
+          )
+        }
+        {viewChat  && (
           <div className="items-center justify-center h-96 w-full ">
-            <Chat userClicked={userClicked} messageList={messageList} setMessageList={setMessageList} />
+            <Chat userClicked={userClicked} messageList={messageList} setMessageList={setMessageList} setViewChat={setViewChat} setViewContacts={setViewContacts} />
           </div>
         )}
       </div>
