@@ -88,7 +88,7 @@ export default function Chat({
                             {message.author}
                           </div>
                           <div className="w-full">
-                            <p className="flex p-2 justify-start bg-white rounded-md shadow-md mr-96">
+                            <p className="flex p-2 justify-start bg-white rounded-md shadow-md md:mr-96">
                               {message.text}
                             </p>
                           </div>
@@ -100,7 +100,7 @@ export default function Chat({
                           {message.author}
                         </div>
                         <div className="w-full ">
-                          <p className="flex p-2 justify-end bg-white rounded-md shadow-md ml-96">
+                          <p className="flex p-2 justify-end bg-white rounded-md shadow-md md:ml-96">
                             {message.text}
                           </p>
                         </div>
