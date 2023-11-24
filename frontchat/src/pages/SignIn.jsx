@@ -4,7 +4,9 @@ import axios from 'axios';
 import { useUserContext } from '../components/ContextUser';
 import { useSocketContext } from '../components/ContextSocket';
 import io from 'socket.io-client'
+import Input from '../components/input';
 import { useNavigate } from 'react-router-dom';
+import ButtonSign from '../components/ButtonSign';
 
 export default function SignIn() {
     
@@ -55,15 +57,7 @@ export default function SignIn() {
                   Email address
                 </label>
                 <div className="mt-2">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    {...register("email", { required: true })}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 pl-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
+                <Input type={"email"} register={register} />
                 </div>
                 {errors.email && <span>This field is required</span>}
               </div>
@@ -74,28 +68,15 @@ export default function SignIn() {
                   </label>
                 </div>
                 <div className="mt-2">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    {...register("password", { required: true })}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 pl-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
+                <Input type={"password"} register={register}/>
                   {errors.password && <span>This field is required</span>}
                 </div>
               </div>
-  
               <div>
-                <button
-                  type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm text-black font-semibold leading-6 transition ease-in-out delay-150 bg-blue-500 hover:text-white hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Sign in
-                </button>
+                <ButtonSign text={"Sign In"} />
               </div>
             </form>
+            <p className='flex justify-center pt-4'>Ainda não cadastrado? <strong><a className='pl-2 cursor-pointer' onClick={() => navigate("/SignUp")}>Clique aqui</a></strong></p>
           </div>
         </div>
       </>

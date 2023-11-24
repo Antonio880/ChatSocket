@@ -5,22 +5,26 @@ import { useSocketContext } from "../components/ContextSocket";
 import Chat from "../components/Chat/Chat";
 import Contacts from "../components/Contacts";
 import { useUserContext } from "../components/ContextUser";
+import NoneUser from "../components/NoneUser";
 
 export default function Home() {
   const [viewChat, setViewChat] = useState(false);
   const [ viewContacts, setViewContacts] = useState(false);
   const { socket } = useSocketContext();
+  const { user } = useUserContext();
   const [ userClicked, setUserClicked] = useState(null);
   const [messageList, setMessageList] = useState([]);
   const [currentUser, setCurrentUser] = useState('');
   const BASE_URL = "http://localhost:3001/"
   // "https://chat-socket-eb53a2dd15bb.herokuapp.com/" ||
   useEffect(() => {
-    socket.emit("get_username");
+    if(user){
+      socket.emit("get_username");
 
-    socket.on("receive_username", (username) => {
-            setCurrentUser(username);
+      socket.on("receive_username", (username) => {
+              setCurrentUser(username);
         });
+    }
   },[]);
 
   useEffect(() => {
@@ -44,25 +48,27 @@ export default function Home() {
       .catch((e) => console.error(`Error sending - ${e}`));
   }, []);
 
-  useEffect(() => {
-    console.log(userClicked)
-  }, [userClicked]);
-
   return (
     <div className="h-screen">
       <Header />
-      <div className="flex flex-row"> 
-        {
-          !viewContacts && (
-            <Contacts setViewChat={setViewChat} viewChat={viewChat} currentUser={currentUser} viewContacts={viewContacts} setViewContacts={setViewContacts} setUserClicked={setUserClicked}/>
-          )
-        }
-        {viewChat  && (
-          <div className="items-center justify-center h-96 w-full ">
-            <Chat userClicked={userClicked} messageList={messageList} setMessageList={setMessageList} setViewChat={setViewChat} setViewContacts={setViewContacts} />
+      {
+        user ? (
+          <div className="flex flex-row"> 
+            {
+              !viewContacts && (
+                <Contacts setViewChat={setViewChat} viewChat={viewChat} currentUser={currentUser} viewContacts={viewContacts} setViewContacts={setViewContacts} setUserClicked={setUserClicked}/>
+              )
+            }
+            {viewChat  && (
+              <div className="items-center justify-center h-96 w-full ">
+                <Chat userClicked={userClicked} messageList={messageList} setMessageList={setMessageList} setViewChat={setViewChat} setViewContacts={setViewContacts} />
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        ):(
+          <NoneUser />
+        )
+      }
     </div>
   );
 }
