@@ -23,7 +23,6 @@ export default function SignIn() {
   const handleClose = () => setOpen(false);
   const { setUser } = useUserContext();
   const { setSocket } = useSocketContext();
-  const [isErrorModalOpen, setErrorModalOpen] = useState(false);
   const BASE_URL = "http://localhost:3001/";
   // "https://chat-socket-eb53a2dd15bb.herokuapp.com/" ||
   const navigate = useNavigate();
@@ -42,8 +41,10 @@ export default function SignIn() {
   const onSubmit = async () => {
     const email = watch("email");
     const password = watch("password");
+    const username = watch("username");
     const data = {
       id: `${new Date().getTime()}`,
+      username: username,
       email: email,
       password: password,
     };
@@ -69,14 +70,26 @@ export default function SignIn() {
   return (
     <>
       <Header />
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-10 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign Up
           </h2>
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                UserName
+              </label>
+              <div className="mt-2">
+                <Input type={"username"} register={register} />
+              </div>
+              {errors.username && <span>This field is required</span>}
+            </div>
             <div>
               <label
                 htmlFor="email"

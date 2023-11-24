@@ -12,7 +12,7 @@ export default function Home() {
   const [ viewContacts, setViewContacts] = useState(false);
   const { socket } = useSocketContext();
   const { user } = useUserContext();
-  const [ userClicked, setUserClicked] = useState(null);
+  const [userClicked, setUserClicked] = useState(null);
   const [messageList, setMessageList] = useState([]);
   const [currentUser, setCurrentUser] = useState('');
   const BASE_URL = "http://localhost:3001/"

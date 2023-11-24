@@ -1,7 +1,6 @@
 
-export default function Input({ type, register, getValues }){
+export default function Input({ type, register }){
     
-    const isPasswordConfirmation = type === "passwordConfirm";
     return(
         <input
             id={type}

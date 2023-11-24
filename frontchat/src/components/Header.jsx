@@ -1,15 +1,13 @@
 import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+// import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useSocketContext } from "./ContextSocket";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "./ContextUser";
 
-const navigation = [
-  { name: "Home", href: "#", current: true },
-  //   { name: 'Team', href: '#', current: false },
-  //   { name: 'Projects', href: '#', current: false },
-  //   { name: 'Calendar', href: '#', current: false },
-];
+// const navigation = [
+//   { name: "Home", href: "#", current: true },
+// ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -18,6 +16,7 @@ function classNames(...classes) {
 export default function Home() {
   const { user, setUser } = useUserContext();
   const navigate = useNavigate();
+  const { socket } = useSocketContext();
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -61,7 +60,7 @@ export default function Home() {
                             type="button"
                             className={`relative  rounded-full p-1 text-gray-400 hover:bg-indigo-600 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 `}
                           >
-                            {user.email}
+                            {user.username}
                           </h3>
                         </div>
                       )}
@@ -84,6 +83,7 @@ export default function Home() {
                               onClick={() => {
                                 setUser(null);
                                 navigate("/");
+                                socket.emit("disconnect", "sign out");
                               }}
                               className={classNames(
                                 active ? "bg-gray-100" : "",

@@ -20,21 +20,21 @@ export default function SignIn() {
     const email = watch("email");
     const password = watch("password");
     const data = {
-      id: `${new Date().getTime()}`,
       email: email,
       password: password,
     }
     //setUser(data);
     try{
-      const response = await axios.post(`${BASE_URL}users`, data);
-      if(response.status === 201 || response.status === 200){
+      const response = await axios.post(`${BASE_URL}user`, data);
+      if(response.status === 200){
         setUser(response.data.user);
         const socket = await io.connect(BASE_URL);
+        console.log(response.data);
         socket.emit('set_username', response.data.user.email);
         setSocket(socket);
         navigate('/home');
       }else{
-        alert("Error: " + response.status);
+        alert("Email e/ou senha incorretos");
       }
     }catch(e){
       alert(`Error - ${e.message}`);
@@ -44,9 +44,9 @@ export default function SignIn() {
   return (
       <>
         <Header />
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-10 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Sign in to your account
             </h2>
           </div>
