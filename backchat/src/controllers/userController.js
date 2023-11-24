@@ -26,7 +26,7 @@ class userController {
       // Verifique se o usuário com o mesmo e-mail já existe
       const existingUser = await user.findOne({ email: email, password: password });
       if (existingUser) {
-        return res.status(200).json({ message: 'User already exists', user: existingUser });
+        return res.status(409).json({ message: 'User already exists' });
       }
       // Se o usuário não existir, crie um novo usuário
       const newUser = await user.create(req.body);
@@ -53,6 +53,19 @@ class userController {
       res.status(200).json({ message: "user successfully deleted" });
     } catch (error) {
       res.status(500).json({ message: `${error.message} - Deletion failed` });
+    }
+  }
+
+  static async getUser( req, res ){
+    try{
+      const { email, password } = req.body;
+      const existingUser = await user.findOne({ email: email, password: password });
+      if (existingUser) {
+        return res.status(200).json({ message: 'Sucess in requisition', user: existingUser });
+      }
+      return res.status(400).json({ message: "Email e/ou Senha errado"});
+    }catch(e){
+      res.status(500).json({ message: `${error.message} - Erro ao pegar usuário` });
     }
   }
 

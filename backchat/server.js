@@ -31,6 +31,10 @@ conexao.once("open", () => {
 io.on("connection", async (socket) => {
     console.log("Novo cliente conectado", socket.id);
 
+    socket.on("disconnect", (reason) => {
+        console.log("disconnect", socket.id, reason);
+    });
+
     socket.on("set_username", username => {
         socket.data.username = username;    
     });
