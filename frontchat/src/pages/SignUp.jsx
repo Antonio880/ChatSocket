@@ -10,6 +10,8 @@ import ButtonSign from "../components/ButtonSign";
 import Input from "../components/input";
 import { Box } from "@mui/material";
 import Modal from '@mui/material/Modal';
+// import nodemailer from 'nodemailer';
+// import stream from 'stream';
 
 export default function SignIn() {
   const {
@@ -52,6 +54,7 @@ export default function SignIn() {
     try {
       const response = await axios.post(`${BASE_URL}users`, data);
       if (response.status === 201) {
+
         setUser(response.data.user);
         const socket = await io.connect(BASE_URL);
         socket.emit("set_username", response.data.user.email);

@@ -1,4 +1,5 @@
 import { user } from "../models/User.js";
+import jwt from 'jsonwebtoken';
 
 class userController {
   static async listusers(req, res) {
@@ -23,14 +24,22 @@ class userController {
   static async createUser(req, res) {
     try {
       const { email, password } = req.body;
-      // Verifique se o usuário com o mesmo e-mail já existe
+
+      // Verificar se o usuário com o mesmo e-mail já existe
       const existingUser = await user.findOne({ email: email, password: password });
       if (existingUser) {
         return res.status(409).json({ message: 'User already exists' });
       }
+
       // Se o usuário não existir, crie um novo usuário
       const newUser = await user.create(req.body);
-      res.status(201).json({ message: 'Created successfully', user: newUser });
+
+      // Gerar token de confirmação
+      const token = jwt.sign({ userId: newUser._id }, 'seu_segredo', { expiresIn: '24h' });
+
+      // Envie o token por e-mail ou salve-o no banco de dados associado ao usuário
+
+      res.status(201).json({ message: 'Created successfully', user: newUser, confirmationToken: token });
     } catch (error) {
       res.status(500).json({ message: `${error.message} - Failed to create user` });
     }
