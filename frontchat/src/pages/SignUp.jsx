@@ -52,9 +52,17 @@ export default function SignIn() {
     try {
       const response = await axios.post(`${BASE_URL}users`, data);
       if (response.status === 201) {
-        setUser(response.data.user);
+        const userUpdated = await axios.put(`${BASE_URL}users/${response.data.user._id}`, {
+          "isOn": "true"
+        });
+        setUser(userUpdated.data.userUpdated);
         const socket = await io.connect(BASE_URL);
-        socket.emit("set_username", response.data.user.email);
+        // if(userUpdated.data.user.username){
+        //   socket.emit('set_username', userUpdated.data.user.username);
+        // }else{
+        //   socket.emit('set_username', userUpdated.data.user.email);
+        // }
+        socket.emit('set_username', response.data.user.email);
         setSocket(socket);
         navigate("/home");
       } else if(response.status === 409) {

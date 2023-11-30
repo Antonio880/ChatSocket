@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSocketContext } from "./ContextSocket";
 import axios from "axios";
+import { user } from "../../../backchat/src/models/User";
 
 export default function Example({ setViewChat, viewChat, currentUser, setUserClicked, viewContacts, setViewContacts }) {
     const [contacts, setContacts] = useState([]);
@@ -10,14 +11,12 @@ export default function Example({ setViewChat, viewChat, currentUser, setUserCli
 
     useEffect(() => {
         getContacts();
-        console.log(contacts);
     }, []);
 
     const getContacts = async () => {
         await axios.get(`${BASE_URL}users`)
             .then(response => {
                 setContacts(response.data);
-                console.log(response.data);
             })
             .catch(err => console.error(err));
     }
@@ -28,7 +27,7 @@ export default function Example({ setViewChat, viewChat, currentUser, setUserCli
                 contacts.map((person) => {
                     if (person.email !== currentUser) {
                         return (
-                            <li key={person.email} className="flex justify-between gap-x-6 py-5">
+                            <li key={person.email} className="flex justify-between  py-5">
                                 <div 
                                   className="flex min-w-0 gap-x-4 cursor-pointer" 
                                   onClick={() => {
@@ -46,6 +45,16 @@ export default function Example({ setViewChat, viewChat, currentUser, setUserCli
                                     <div className="min-w-0 flex-auto">
                                         <p className="mt-1 truncate text-xs leading-5 text-gray-500"><strong>{person.email}</strong></p>
                                     </div>
+                                    {
+                                        person.isOn && (
+                                            <div className="mt-1 flex items-center gap-x-1.5">
+                                                <div className="flex-none rounded-full bg-emerald-500/20 p-1">
+                                                    <div className="h-3 w-3 rounded-full bg-emerald-500" />
+                                                </div>
+                                                <p className="text-xs leading-5 text-gray-500">Online</p>
+                                            </div>
+                                        )
+                                    }
                                 </div>
                             </li>
                         );

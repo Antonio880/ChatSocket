@@ -6,69 +6,86 @@ import Chat from "../components/Chat/Chat";
 import Contacts from "../components/Contacts";
 import { useUserContext } from "../components/ContextUser";
 import NoneUser from "../components/NoneUser";
+import DetailsContact from "../components/Modal/DetailsContact";
 
 export default function Home() {
   const [viewChat, setViewChat] = useState(false);
-  const [ viewContacts, setViewContacts] = useState(false);
+  const [viewContacts, setViewContacts] = useState(false);
   const { socket } = useSocketContext();
   const { user } = useUserContext();
   const [userClicked, setUserClicked] = useState(null);
+  const [ viewDetailsContact, setViewDetailsContact ] = useState(false);
   const [messageList, setMessageList] = useState([]);
-  const [currentUser, setCurrentUser] = useState('');
-  const BASE_URL = "http://localhost:3001/"
+  const [currentUser, setCurrentUser] = useState("");
+  const BASE_URL = "http://localhost:3001/";
   // "https://chat-socket-eb53a2dd15bb.herokuapp.com/" ||
   useEffect(() => {
-    if(user){
+    if (user) {
       socket.emit("get_username");
 
       socket.on("receive_username", (username) => {
-              setCurrentUser(username);
-        });
+        setCurrentUser(username);
+      });
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}messages`)
-    .then((response) => {
-      const messages = [...response.data];
+    axios
+      .get(`${BASE_URL}messages`)
+      .then((response) => {
+        const messages = [...response.data];
 
-      for (let i = 0; i < messages.length - 1; i++) {
-        const currentMessage = messages[i];
-        const nextMessage = messages[i + 1];
+        for (let i = 0; i < messages.length - 1; i++) {
+          const currentMessage = messages[i];
+          const nextMessage = messages[i + 1];
 
-        if (currentMessage.text === nextMessage.text) {
-          // Remove a mensagem atual se o texto for igual ao próximo
-          messages.splice(i, 1);
-          i--; // Decrementa o índice para verificar novamente a posição atual
+          if (currentMessage.text === nextMessage.text) {
+            // Remove a mensagem atual se o texto for igual ao próximo
+            messages.splice(i, 1);
+            i--; // Decrementa o índice para verificar novamente a posição atual
+          }
         }
-      }
 
-      setMessageList(messages);
-    })
+        setMessageList(messages);
+      })
       .catch((e) => console.error(`Error sending - ${e}`));
   }, []);
 
   return (
     <div className="h-screen">
       <Header />
-      {
-        user ? (
-          <div className="flex flex-row"> 
-            {
-              !viewContacts && (
-                <Contacts setViewChat={setViewChat} viewChat={viewChat} currentUser={currentUser} viewContacts={viewContacts} setViewContacts={setViewContacts} setUserClicked={setUserClicked}/>
-              )
-            }
-            {viewChat  && (
-              <div className="items-center justify-center h-96 w-full ">
-                <Chat userClicked={userClicked} messageList={messageList} setMessageList={setMessageList} setViewChat={setViewChat} setViewContacts={setViewContacts} />
-              </div>
-            )}
-          </div>
-        ):(
-          <NoneUser />
-        )
-      }
+      {user ? (
+        <div className="flex flex-row">
+          {!viewContacts && (
+            <Contacts
+              setViewChat={setViewChat}
+              viewChat={viewChat}
+              currentUser={currentUser}
+              viewContacts={viewContacts}
+              setViewContacts={setViewContacts}
+              setUserClicked={setUserClicked}
+            />
+          )}
+          {viewChat && (
+            <div className="flex w-full">
+              <Chat
+                userClicked={userClicked}
+                messageList={messageList}
+                setMessageList={setMessageList}
+                setViewChat={setViewChat}
+                setViewContacts={setViewContacts}
+                viewDetailsContact={viewDetailsContact}
+                setViewDetailsContact={setViewDetailsContact}
+              />
+              {viewDetailsContact && (
+                <DetailsContact userClicked={userClicked} />
+              )}
+            </div>
+          )}
+        </div>
+      ) : (
+        <NoneUser />
+      )}
     </div>
   );
 }
