@@ -10,14 +10,12 @@ export default function Example({ setViewChat, viewChat, currentUser, setUserCli
 
     useEffect(() => {
         getContacts();
-        console.log(contacts);
     }, []);
 
     const getContacts = async () => {
         await axios.get(`${BASE_URL}users`)
             .then(response => {
                 setContacts(response.data);
-                console.log(response.data);
             })
             .catch(err => console.error(err));
     }
