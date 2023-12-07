@@ -7,7 +7,7 @@ import Contacts from "../components/Contacts";
 import { useUserContext } from "../components/ContextUser";
 import NoneUser from "../components/NoneUser";
 import DetailsContact from "../components/DetailsContacts";
-import RepoArea from "../components/RepoArea";
+import RepoArea from "../components/RepoArea/RepoArea";
 
 export default function Home() {
   const [viewChat, setViewChat] = useState(false);
@@ -18,6 +18,7 @@ export default function Home() {
   const [ viewRepos, setViewRepos ] = useState(true);
   const [userClicked, setUserClicked] = useState(null);
   const [ viewDetailsContact, setViewDetailsContact ] = useState(false);
+  const [ loadingDisplay, setLoadingDisplay ] = useState(false);
   const [messageList, setMessageList] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
   const BASE_URL = "http://localhost:3001/";
@@ -31,6 +32,20 @@ export default function Home() {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (loadingDisplay) {
+      axios.get(`https://api.github.com/users/${user.username}/repos`)
+        .then((response) => {
+          setReposGitHub([...reposGitHub, ...response.data]);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [loadingDisplay]);
+
+  useEffect(() => {
+    console.log(reposGitHub); 
+  }, [reposGitHub])
 
   useEffect(() => {
     axios
@@ -58,7 +73,8 @@ export default function Home() {
     <div className="h-screen">
       <Header />
       {user ? (
-        <div className="flex flex-row">
+        <div className="flex flex-col">
+          <div className="flex flex-row">
           {!viewContacts && (
             <Contacts
               setViewChat={setViewChat}
@@ -85,16 +101,16 @@ export default function Home() {
               )}
             </div>
           )}
+          </div>
           {
             viewRepos && (
-              <RepoArea data={reposGitHub} />
+              <RepoArea data={reposGitHub} setLoadingDisplay={setLoadingDisplay} loadingDisplay={loadingDisplay} setViewRepos={setViewRepos} />
             )
           }
         </div>
       ) : (
         <NoneUser />
       )}
-      
     </div>
   );
 }
