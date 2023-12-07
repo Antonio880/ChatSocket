@@ -27,14 +27,12 @@ export default function Chat({
       userRec: userClicked._id,
       userEnv: user._id,
     };
-    console.log(newMessage);
     socket.emit("message", newMessage);
     messageRef.current.value = "";
   };
 
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
-      console.log(data);
       axios
         .post(`${BASE_URL}messages`, data)
         .then((response) => console.log(response.data))
@@ -63,7 +61,7 @@ export default function Chat({
 
   return (
     <div
-      className={`h-4/3 mx-auto p-4 mt-6 bg-gray-100 rounded-md shadow-md ${viewDetailsContact && "w-[800px]"} ${
+      className={`h-3/3 mx-auto p-4 mt-6 bg-gray-100 rounded-md shadow-md ${viewDetailsContact && "w-[800px]"} ${
         window.innerWidth < 768 ? "w-full h-[400] px-10" : "w-3/4 mt-20"
       }`}
     >

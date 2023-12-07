@@ -1,6 +1,8 @@
 import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 // import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useSocketContext } from "./ContextSocket";
+import { useNavigate } from "react-router-dom";
 import { useUserContext } from "./ContextUser";
 
 // const navigation = [
@@ -13,6 +15,8 @@ function classNames(...classes) {
 
 export default function Home() {
   const { user, setUser } = useUserContext();
+  const navigate = useNavigate();
+  const { socket } = useSocketContext();
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -76,6 +80,11 @@ export default function Home() {
                         <Menu.Item>
                           {({ active }) => (
                             <a
+                              onClick={() => {
+                                setUser(null);
+                                navigate("/");
+                                socket.emit("disconnect", "sign out");
+                              }}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
