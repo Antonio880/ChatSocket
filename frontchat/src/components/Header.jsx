@@ -3,6 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 // import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useSocketContext } from "./ContextSocket";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useUserContext } from "./ContextUser";
 
 // const navigation = [
@@ -17,6 +18,7 @@ export default function Home() {
   const { user, setUser } = useUserContext();
   const navigate = useNavigate();
   const { socket } = useSocketContext();
+  const BASE_URL = "http://localhost:5173/";
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -80,7 +82,13 @@ export default function Home() {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              onClick={() => {
+                              onClick={async () => {
+                                await axios.put(
+                                  `${BASE_URL}users/${user._id}`,
+                                  {
+                                    isOn: "false",
+                                  }
+                                );
                                 setUser(null);
                                 navigate("/");
                                 socket.emit("disconnect", "sign out");
