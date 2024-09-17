@@ -15,7 +15,7 @@ export default function SignIn() {
     watch,
     formState: { errors },
   } = useForm();
-  const { setUser } = useUserContext();
+  const { user, setUser } = useUserContext();
   const { setSocket } = useSocketContext();
   const BASE_URL = "http://localhost:3001/";
   // "https://chat-socket-eb53a2dd15bb.herokuapp.com/" ||
@@ -27,7 +27,6 @@ export default function SignIn() {
       email: email,
       password: password,
     };
-    //setUser(data);
     try {
       const response = await axios.post(`${BASE_URL}user`, data);
       if (response.status === 200) {
@@ -37,9 +36,9 @@ export default function SignIn() {
             isOn: "true",
           }
         );
-        setUser(userUpdated.data.userUpdated);
+        setUser(userUpdated.data.user);
         const socket = await io.connect(BASE_URL);
-        console.log(response.data);
+        console.log(userUpdated);
         socket.emit("set_username", response.data.user.email);
         setSocket(socket);
         navigate("/home");
@@ -104,20 +103,18 @@ export default function SignIn() {
               </a>
             </strong>
           </p>
-          <div className="flex justify-center pt-3">
-            <button
-              className="disabled transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 bg-indigo-600 hover:bg-indigo-500 font-semibold leading-6 text-black hover:text-white w-60 rounded-md h-8 text-sm"
-              onClick={() => {
-                navigate(
-                  "github.com/login/oauth/authorize?client_id=a6c6220348f21b49b428&scope=read:user user:email repo"
-                );
-              }}
-            >
-              Log in with GitHub
-            </button>
-          </div>
+          
         </div>
       </div>
     </>
   );
 }
+
+{/* <div className="flex justify-center pt-3">
+            <button
+              className="disabled transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 bg-indigo-600 hover:bg-indigo-500 font-semibold leading-6 text-black hover:text-white w-60 rounded-md h-8 text-sm"
+              onClick={requestLoginWithGithub()}
+            >
+              Log in with GitHub
+            </button>
+          </div> */}

@@ -17,33 +17,6 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
-// app.get('/githubLogin', (req, res) => {
-//     const link = `<a href="https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}">Login with GitHub</a>`;
-//   res.send(link);
-//   });
-  
-// app.get('/callback', async (req, res) => {
-// const code = req.query.code;
-
-// try {
-//     // Exchange the code for an access token
-//     const response = await axios.post('https://github.com/login/oauth/access_token', {
-//     client_id: process.env.CLIENT_ID,
-//     client_secret: process.env.CLIENT_SECRET,
-//     code: code,
-//     });
-
-//     const accessToken = querystring.parse(response.data).access_token;
-
-//     // You can now use the accessToken to make authenticated requests to the GitHub API
-
-//     const render = `Successfully authorized! Got code ${code}. Access Token: ${accessToken}`;
-//     res.send(render);
-// } catch (error) {
-//     console.error('Error exchanging code for access token:', error.message);
-//     res.status(500).send('Error exchanging code for access token');
-// }
-// })
 
 routes(app);
 
